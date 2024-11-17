@@ -1,0 +1,57 @@
+body, html {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: wheat;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.calculator {
+    box-sizing: border-box;
+    height: 85%;
+    aspect-ratio: 3/4;
+    padding: 1%;
+    background-color: #222222;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.display {
+    background-color: floralwhite;
+    text-align: right;
+    box-sizing: border-box;
+    padding: 0.5em;
+}
+
+.upper {
+    color: dimgray;
+    margin: 0 0 1em;
+}
+
+.main {
+    font-size: 2em;
+}
+
+.numpad {
+    background-color: floralwhite;
+}
+
+.row {
+    display: flex;
+}
+
+button {
+    width: 25%;
+    aspect-ratio: 4/3;
+    margin: 0;
+    padding: 0;
+    border: 1px solid black;
+    font-size: 1.5em;
+}
