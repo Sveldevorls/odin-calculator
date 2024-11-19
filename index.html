@@ -9,41 +9,42 @@
 <body>
     <div class="calculator">
         <div class="display">
-            <div class="upper">123456789</div>
-            <div class="main">123456789</div>
+            <div class="upper">&ZeroWidthSpace;</div>
+            <div class="main">0</div>
         </div>
         <div class="numpad">
             <div class="row">
-                <button class="operand">C</button>
-                <button class="operand">+/-</button>
-                <button class="operand">%</button>
-                <button class="operand">←</button>
+                <button class="operand" id="clear">C</button>
+                <button class="operand" id="sign">+/-</button>
+                <button class="operand" id="percent">%</button>
+                <button class="operand" id="backspace">←</button>
             </div>
             <div class="row">
                 <button class="num">7</button>
                 <button class="num">8</button>
                 <button class="num">9</button>
-                <button class="operand">÷</button>
+                <button class="operand" id="divide">÷</button>
             </div>
             <div class="row">
                 <button class="num">4</button>
                 <button class="num">5</button>
                 <button class="num">6</button>
-                <button class="operand">×</button>
+                <button class="operand" id="multiply">×</button>
             </div>
             <div class="row">
                 <button class="num">1</button>
                 <button class="num">2</button>
                 <button class="num">3</button>
-                <button class="operand">-</button>
+                <button class="operand" id="minus">-</button>
             </div>
             <div class="row">
                 <button class="num">0</button>
-                <button class="num">.</button>
-                <button class="operand">=</button>
-                <button class="operand">+</button>
+                <button class="decimal">.</button>
+                <button class="operand" id="equals">=</button>
+                <button class="operand" id="plus">+</button>
             </div>
         </div>
     </div>
 </body>
+<script src="js.js"></script>
 </html>
