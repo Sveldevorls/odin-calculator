@@ -45,6 +45,7 @@ body {
 
 .row {
     display: flex;
+    align-content: center;
 }
 
 button {
@@ -54,4 +55,8 @@ button {
     padding: 0;
     border: 1px solid black;
     font-size: 1.5em;
+}
+
+.active {
+    background-color: lightslategray;
 }
