@@ -1,7 +1,6 @@
 let currentNumberRawString = "0";
 let currentNumber = 0;
 let processQueue = [0]
-let isFloat = false;
 let prevActiveOperand = null;
 
 let operations = {
@@ -10,9 +9,9 @@ let operations = {
     "multiply" : "*",
     "divide" : "/",
     "equals" : "=",
-    /* "clear" : clearDisplay,
+    "clear" : clearDisplay,
     "sign" : changeSign,
-    "backspace" : backspace, */
+    "backspace" : backspace,
 }
 
 let upperDisplay = document.body.querySelector(".upper");
@@ -24,8 +23,7 @@ let decimalPoint = document.body.querySelector(".decimal");
 
 
 decimalPoint.addEventListener("click", () => {
-    if (!isFloat) {
-        isFloat = true;
+    if (!currentNumberRawString.includes(".")) {
         currentNumberRawString += ".";
         mainDisplay.innerText = currentNumberRawString;
     }
@@ -56,7 +54,6 @@ for (operandButton of operandButtons) {
                         renderUpperDisplay();
                         currentNumberRawString = "0";
                         currentNumber = 0;
-                        isFloat = false;
                         mainDisplay.innerText = currentNumberRawString;
                     }
                     break
@@ -68,35 +65,55 @@ for (operandButton of operandButtons) {
                         showCurrentOperand(operationPressed);
                         renderUpperDisplay();
                     } else {
-                        processQueue.push(currentNumber)
-                        operate(processQueue)
+                        processQueue.push(0);
+                        operate(processQueue);
                     }
                     break;
 
                 // 3 -> eval first, if operand in +-*/ then take the result as the first number of the new queue
                 case 3:
                     operate(processQueue)
+                    processQueue.push("=")
                     if (operationPressed.id != "equals") {
-                        //
+                        processQueue = [currentNumber, operations[operationPressed.id]]
+                        showCurrentOperand(operationPressed);
+                        renderUpperDisplay();
+                        currentNumberRawString = "0";
+                        currentNumber = 0;
+                        mainDisplay.innerText = currentNumberRawString;
                     }
                     break
+
+                // 4 -> take the result as the first number of the new queue
+                    case 4:
+                        processQueue = [currentNumber, operations[operationPressed.id]]
+                        showCurrentOperand(operationPressed);
+                        renderUpperDisplay();
+                        currentNumberRawString = "0";
+                        currentNumber = 0;
+                        mainDisplay.innerText = currentNumberRawString;
+                        break;
             }
         }
     })
 }
 
 
-
-
-
-
 function renderNumber(dStr) {
-    currentNumberRawString == "0" ? currentNumberRawString = dStr :
-                                    currentNumberRawString += dStr;
-    isFloat ? currentNumber = parseFloat(currentNumberRawString, 10) :
-              currentNumber = parseInt(currentNumberRawString, 10);
-    mainDisplay.innerText = currentNumberRawString;
+    if (currentNumberRawString == "0") {
+        currentNumberRawString = dStr;
+    } else {
+        currentNumberRawString += dStr;
+    }
+                                    
+    if (currentNumberRawString.includes(".")) {
+        currentNumber = parseFloat(currentNumberRawString, 10);
+    } else {
+        currentNumber = parseInt(currentNumberRawString, 10);
+    }
+
     updateQueueNumber(currentNumber);
+    mainDisplay.innerText = currentNumberRawString;
     console.log(processQueue)
 }
 
@@ -111,15 +128,15 @@ function updateQueueNumber(number) {
         // 2 -> add number to the queue (operation selected)
         case 2:
             processQueue.push(number);
+            prevActiveOperand.classList.remove("active");
             break
     }
-    if (prevActiveOperand) prevActiveOperand.classList.remove("active");
 }
 
 function showCurrentOperand(button){
-    if (prevActiveOperand != null) prevActiveOperand.classList.remove("active")
-        button.classList.add("active");
-        prevActiveOperand = button;
+    if (prevActiveOperand != null) prevActiveOperand.classList.remove("active");
+    button.classList.add("active");
+    prevActiveOperand = button;
 }
 
 function renderUpperDisplay() {
@@ -128,20 +145,68 @@ function renderUpperDisplay() {
 
 function operate(queue) {
     let [num1, op, num2] = [...queue];
+    let result = 0
+
     upperDisplay.innerText = queue.join(" ") + " =";
     switch (op) {
         case "+":
-            mainDisplay.innerText = (num1 + num2).toString();
+            result = num1 + num2;
             break
         case "-":
-            mainDisplay.innerText = (num1 - num2).toString();
+            result = num1 - num2;
             break
         case "*":
-            mainDisplay.innerText = (num1 * num2).toString();
+            result = num1 * num2;
             break
         case "/":
-            if (num2 == 0) mainDisplay.innerText = "ERROR"
-            else mainDisplay.innerText = (num1 / num2).toString();
+            num2 == 0 ? result = "ERROR" : result = num1 / num2;
             break
     }
+    mainDisplay.innerText = result;
+    currentNumber = result;
+    currentNumberRawString = result.toString();
+    if (prevActiveOperand != null) prevActiveOperand.classList.remove("active");
+}
+
+function clearDisplay() {
+    currentNumber = 0;
+    currentNumberRawString = "0";
+    upperDisplay.innerText = "\u200b";
+    mainDisplay.innerText = currentNumberRawString;
+    processQueue = [0];
+}
+
+function changeSign() {
+    if (processQueue.length == 4) {
+        processQueue = [currentNumber]
+    }   
+    if (currentNumber != 0 && (processQueue.length == 1 || processQueue.length == 3)) {
+        currentNumber *= -1;
+        if (currentNumberRawString.includes("-")) {
+            currentNumberRawString = currentNumberRawString.slice(1,);
+        } else {
+            currentNumberRawString = "-" + currentNumberRawString;
+        }
+        processQueue[processQueue.length - 1] = currentNumber;
+    }
+    
+                                     
+    mainDisplay.innerText = currentNumberRawString;
+}
+
+function backspace(){
+    if (currentNumberRawString.length == 1) {
+        currentNumberRawString = "0"
+    } else {
+        currentNumberRawString = currentNumberRawString.slice(0, currentNumberRawString.length - 1)
+    }
+
+    if (currentNumberRawString.includes(".")) {
+        currentNumber = parseFloat(currentNumberRawString);
+    } else {
+        currentNumber = parseInt(currentNumberRawString);
+    }
+
+    mainDisplay.innerText = currentNumberRawString;
+    updateQueueNumber(currentNumber);
 }
